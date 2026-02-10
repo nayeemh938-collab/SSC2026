@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSC Physics - Chapter 4</title>
+    <style>
+        /* ডিফল্ট থিম (পেইজ ১ এর জন্য - সবুজ) */
+        :root {
+            --primary-color: #00796b; /* Teal Green */
+            --secondary-bg: #e0f2f1;
+            --accent-color: #004d40;
+            --text-color: #333;
+            --bg-body: #f4f6f8;
+            --card-bg: #ffffff;
+            --btn-inactive: #ddd;
+        }
+
+        /* পেইজ ২ এর জন্য থিম ভেরিয়েবল (জাভাস্ক্রিপ্ট দিয়ে ক্লাস এড করা হবে - বেগুনি) */
+        body.theme-page2 {
+            --primary-color: #6a1b9a; /* Deep Purple */
+            --secondary-bg: #f3e5f5;
+            --accent-color: #4a148c;
+            --bg-body: #fffbf0; /* Warm background */
+        }
+
+        body {
+            font-family: 'SolaimanLipi', 'Kalpurush', Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            transition: background-color 0.5s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* হেডার ডিজাইন */
+        header {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-bottom: 5px solid var(--primary-color);
+            transition: border-color 0.5s ease;
+        }
+
+        .exam-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 0;
+        }
+
+        .chapter-info {
+            background-color: var(--secondary-bg);
+            color: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 10px 0;
+            font-weight: 600;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        .teacher-info {
+            font-size: 0.95rem;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .watermark {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* ন্যাভিগেশন বাটন */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background-color: var(--btn-inactive);
+            color: #666;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: #fff;
+            transform: scale(1.02);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        /* পেইজ কন্টেন্ট */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            border-bottom: 2px dashed var(--primary-color);
+            padding-bottom: 10px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        /* প্রশ্নোত্তর ডিজাইন */
+        .qa-card {
+            background: var(--card-bg);
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .qa-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        details {
+            width: 100%;
+        }
+
+        summary {
+            padding: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.05rem;
+            list-style: none;
+            position: relative;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        /* আইকন */
+        summary::after {
+            content: '+';
+            position: absolute;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        details[open] summary::after {
+            transform: rotate(45deg);
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid #eee;
+            color: var(--primary-color);
+        }
+
+        .answer {
+            padding: 15px 20px;
+            background-color: var(--secondary-bg);
+            color: #444;
+            font-size: 1rem;
+            line-height: 1.6;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        /* প্রশ্নের সিরিয়াল নম্বর */
+        .q-num {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--primary-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: background 0.5s;
+        }
+
+        /* ম্যাথ স্টাইল */
+        .math-step {
+            font-family: 'Times New Roman', serif;
+            margin-top: 5px;
+            display: block;
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        /* ছোট স্ক্রিনের জন্য */
+        @media (max-width: 480px) {
+            .exam-title { font-size: 1.5rem; }
+            summary { font-size: 0.95rem; padding: 14px; }
+            .answer { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 class="exam-title">SSC-2026</h1>
+        <div class="chapter-info">পদার্থ → ৪র্থ অধ্যায় → কাজ, ক্ষমতা ও শক্তি</div>
+        <div class="teacher-info">MD Mehedi Hasan Nayeem (BSC in Physics)</div>
+        <div class="watermark">Developed By Nayeem</div>
+    </header>
+
+    <!-- নেভিগেশন ট্যাব -->
+    <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('page1')">জ্ঞানমূলক (ক)</button>
+        <button class="tab-btn" onclick="switchTab('page2')">অনুধাবনমূলক (খ)</button>
+    </nav>
+
+    <!-- পেইজ ১: জ্ঞানমূলক (সবুজ থিম) -->
+    <main id="page1" class="page active">
+        <div class="section-title">জ্ঞানমূলক ও সংক্ষিপ্ত প্রশ্ন- ক Type</div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">১</span>কাজ কাকে বলে?</summary>
+                <div class="answer">
+                    কোনো বস্তুর ওপর বল প্রয়োগ করলে যদি বস্তুটির সরণ ঘটে, তবে সেই প্রযুক্ত বল এবং বলের দিকে সরণের গুণফলকেই কাজ বলা হয়।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">২</span>গতিশক্তি কাকে বলে?</summary>
+                <div class="answer">
+                    কোনো গতিশীল বস্তু তার গতির জন্য কাজ করার যে সামর্থ্য লাভ করে, তাকেই গতিশক্তি বলা হয়।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৩</span>যান্ত্রিক শক্তি কাকে বলে?</summary>
+                <div class="answer">
+                    কোনো বস্তুর অবস্থান পরিবর্তন বা গতির কারণে তার মধ্যে যে শক্তি জমা থাকে, তাকে যান্ত্রিক শক্তি বলে।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৪</span>কর্মদক্ষতা কাকে বলে?</summary>
+                <div class="answer">
+                    কোনো যন্ত্র থেকে পাওয়া মোট কার্যকর শক্তি এবং তাতে দেওয়া মোট শক্তির অনুপাতকে ঐ যন্ত্রের কর্মদক্ষতা বলে।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৫</span>বিভবশক্তি কাকে বলে?</summary>
+                <div class="answer">
+                    স্বাভাবিক অবস্থান থেকে পরিবর্তন করে কোনো বস্তুকে অন্য অবস্থানে আনলে সেটি কাজ করার যে সামর্থ্য অর্জন করে, তাকে বিভবশক্তি বলে।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৬</span>নবায়নযোগ্য শক্তি কাকে বলে?</summary>
+                <div class="answer">
+                    যে শক্তির উৎস বারবার ব্যবহার করা যায় এবং কখনোই ফুরিয়ে যায় না, তাকে নবায়নযোগ্য শক্তি বলে।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৭</span>কন্ট্রোল রড কাকে বলে?</summary>
+                <div class="answer">
+                    নিউক্লিয় চুল্লিতে ফিশন বিক্রিয়ার গতি নিয়ন্ত্রণ করার জন্য বোরন বা ক্যাডমিয়ামের তৈরি যে দণ্ড ব্যবহার করা হয়, তাকে কন্ট্রোল রড বলে।
+                </div>
+            </details>
+        </div>
+    </main>
+
+
+    <!-- পেইজ ২: অনুধাবনমূলক (বেগুনি থিম) -->
+    <main id="page2" class="page">
+        <div class="section-title">অনুধাবনমূলক প্রশ্ন- খ Type</div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">১</span>কোন কোন ক্ষেত্রে কাজ সংঘটিত হয় না?</summary>
+                <div class="answer">
+                    যদি বস্তুর ওপর বল প্রয়োগ করা সত্ত্বেও কোনো সরণ না ঘটে অথবা বল প্রয়োগের ফলে সরণ বলের দিকের সাথে লম্বভাবে ঘটে, তবে পদার্থবিজ্ঞানের ভাষায় কোনো কাজ হয় না।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">২</span>৫০ জুল কাজ বলতে কী বোঝায়?</summary>
+                <div class="answer">
+                    ৫০ জুল কাজ বলতে বোঝায়, কোনো বস্তুর ওপর ১ নিউটন বল প্রয়োগ করলে বলের দিকে তার ৫০ মিটার সরণ ঘটে, অথবা ৫০ নিউটন বল প্রয়োগে ১ মিটার সরণ ঘটে।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৩</span>চলন্ত সিঁড়ি দিয়ে উপরে উঠা কী ধরনের কাজ? ব্যাখ্যা করো।</summary>
+                <div class="answer">
+                    চলন্ত সিঁড়ি দিয়ে উপরে উঠা হলো অভিকর্ষ বলের বিরুদ্ধে কাজ। পৃথিবী বস্তুকে নিচের দিকে টানে, কিন্তু যান্ত্রিক শক্তির সাহায্যে বস্তুকে অভিকর্ষ বলের বিপরীতে উপরের দিকে ওঠানো হয় বলে এটি ঋণাত্মক বা বলের বিরুদ্ধে কাজ।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৪</span>শক্তি ও কাজের একক অভিন্ন কেন? ব্যাখ্যা করো।</summary>
+                <div class="answer">
+                    কাজ করার সামর্থ্যই হলো শক্তি। অর্থাৎ কোনো বস্তু যতটুকু কাজ করতে পারে, তা দিয়েই তার শক্তি পরিমাপ করা হয়। যেহেতু শক্তি কাজেরই একটি রূপ, তাই উভয়ের একক অভিন্ন এবং তা হলো জুল।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৫</span>কোনো নির্দিষ্ট স্প্রিংকে যত বেশি সংকুচিত করতে চাও তত বেশি শক্তির প্রয়োজন- ব্যাখ্যা করো।</summary>
+                <div class="answer">
+                    স্প্রিংকে সংকুচিত করলে এর মধ্যে একটি বিপরীতমুখী বল তৈরি হয় যা সরণের সমানুপাতিক। তাই স্প্রিংটিকে যত বেশি সংকুচিত করা হবে, বাধাদানকারী বল তত বাড়বে এবং সেই বলের বিরুদ্ধে কাজ করতে তত বেশি শক্তির প্রয়োজন হবে।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৬</span>কোনো বস্তুর বিভব শক্তি 60 জুল বলতে কী বোঝায়?</summary>
+                <div class="answer">
+                    এর অর্থ হলো, বস্তুটিকে তার স্বাভাবিক অবস্থান থেকে বর্তমান অবস্থানে আনতে ৬০ জুল পরিমাণ কাজ করতে হয়েছে। অথবা বলা যায়, বস্তুটি বর্তমান অবস্থান থেকে স্বাভাবিক অবস্থায় ফিরে যেতে ৬০ জুল কাজ করতে পারবে।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৭</span>বিভবশক্তি কীসের ওপর নির্ভর করে? ব্যাখ্যা করো।</summary>
+                <div class="answer">
+                    বিভবশক্তি মূলত বস্তুর ভর, অভিকর্ষজ ত্বরণ এবং উচ্চতার ওপর নির্ভর করে। তবে নির্দিষ্ট ভরের বস্তুর জন্য নির্দিষ্ট স্থানে বিভবশক্তি শুধুমাত্র উচ্চতার ওপর নির্ভর করে; উচ্চতা বাড়লে বিভবশক্তি বাড়ে।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৮</span>জীবাশ্ম জ্বালানি বলতে কী বুঝায়?</summary>
+                <div class="answer">
+                    কোটি কোটি বছর আগে গাছপালা ও প্রাণী মাটির নিচে চাপা পড়ে উচ্চ তাপ ও চাপে যে জ্বালানিতে পরিণত হয়েছে, তাকে জীবাশ্ম জ্বালানি বলে। যেমন: কয়লা, প্রাকৃতিক গ্যাস ও তেল।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">৯</span>নিউক্লিয় বিক্রিয়া পরিবেশ বান্ধব নয় কেন? ব্যাখ্যা করো।</summary>
+                <div class="answer">
+                    নিউক্লিয় বিক্রিয়ায় মারাত্মক ক্ষতিকর তেজস্ক্রিয় বর্জ্য তৈরি হয় যা থেকে আলফা, বিটা ও গামা রশ্মি বের হয়। এই বর্জ্যগুলো হাজার বছর ধরে পরিবেশ ও জীবের ক্ষতি করতে পারে এবং এদের নিরাপদ ব্যবস্থাপনা খুবই কঠিন, তাই এটি পরিবেশ বান্ধব নয়।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">১০</span>বায়োমাসকে নবায়নযোগ্য শক্তির উৎস বলার কারণ ব্যাখ্যা করো।</summary>
+                <div class="answer">
+                    বায়োমাস হলো উদ্ভিদ ও প্রাণীজ উৎস থেকে প্রাপ্ত জৈব পদার্থ। যেহেতু উদ্ভিদ ও প্রাণীজ বর্জ্য পুনরায় উৎপাদন করা সম্ভব এবং এটি সহজে নিঃশেষ হয় না, তাই বায়োমাসকে নবায়নযোগ্য শক্তির উৎস বলা হয়।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">১১</span>ধনুকের রশি টেনে তীর ছোঁড়ার সময় কীভাবে শক্তির রূপান্তর ঘটে?</summary>
+                <div class="answer">
+                    ধনুকের রশি টানলে তাতে পেশিশক্তি বিভবশক্তি হিসেবে জমা হয়। রশি ছেড়ে দিলে সেই সঞ্চিত বিভবশক্তি তীরের গতিশক্তিতে রূপান্তরিত হয়, ফলে তীরটি দ্রুতবেগে ছুটে যায়।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">১২</span>দোলনা একপ্রান্তে টেনে ছেড়ে দিলে অপর প্রান্তে পৌঁছানো পর্যন্ত শক্তির রূপান্তর ব্যাখ্যা করো।</summary>
+                <div class="answer">
+                    দোলনাকে টেনে তুললে তাতে বিভবশক্তি জমা হয়। ছেড়ে দিলে তা নিচে নামার সময় গতিশক্তিতে রূপান্তরিত হয় এবং মাঝখানে গতিশক্তি সর্বোচ্চ হয়। আবার উপরে ওঠার সময় সেই গতিশক্তি পুনরায় বিভবশক্তিতে রূপান্তরিত হয়।
+                </div>
+            </details>
+        </div>
+
+        <!-- ম্যাথসহ উত্তর আপডেট করা হয়েছে -->
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">১৩</span>100MeV কে জুলে প্রকাশ করো।</summary>
+                <div class="answer">
+                    আমরা জানি,<br>
+                    <span class="math-step">1 eV = 1.6 × 10<sup>-19</sup> J</span>
+                    <br>
+                    দেওয়া আছে, <span class="math-step">100 MeV</span>
+                    <span class="math-step">= 100 × 10<sup>6</sup> eV  [∵ 1 M = 10<sup>6</sup>]</span>
+                    <span class="math-step">= 100 × 10<sup>6</sup> × 1.6 × 10<sup>-19</sup> J</span>
+                    <span class="math-step">= 1.6 × 10<sup>2</sup> × 10<sup>6</sup> × 10<sup>-19</sup> J</span>
+                    <span class="math-step">= 1.6 × 10<sup>-11</sup> J (উত্তর)</span>
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">১৪</span>লভ্য কার্যকর শক্তি কর্মদক্ষতার উপর নির্ভর করে কেন?</summary>
+                <div class="answer">
+                    কর্মদক্ষতা হলো যন্ত্রের শক্তি কাজে রূপান্তর করার ক্ষমতা। যন্ত্রের কর্মদক্ষতা যত বেশি হবে, অপচয় তত কম হবে এবং প্রদত্ত শক্তি থেকে তত বেশি লভ্য কার্যকর শক্তি পাওয়া যাবে।
+                </div>
+            </details>
+        </div>
+
+        <div class="qa-card">
+            <details>
+                <summary><span class="q-num">১৫</span>কর্মদক্ষতার মান 1 এর বেশি হয় না কেন? ব্যাখ্যা করো।</summary>
+                <div class="answer">
+                    শক্তির সংরক্ষণশীলতা নীতি অনুযায়ী শক্তি সৃষ্টি করা যায় না। যন্ত্রে ঘর্ষণ বা তাপের কারণে কিছু শক্তি অপচয় হয়, তাই লভ্য শক্তি সবসময় প্রদত্ত শক্তির চেয়ে কম হয়। এজন্য লভ্য ও প্রদত্ত শক্তির অনুপাত বা কর্মদক্ষতা কখনোই ১ এর বেশি হতে পারে না।
+                </div>
+            </details>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 Developed By Nayeem
+    </footer>
+</div>
+
+<script>
+    function switchTab(pageId) {
+        // সব পেইজ এবং বাটন রিসেট করা
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+        // নতুন পেইজ এবং বাটন একটিভ করা
+        document.getElementById(pageId).classList.add('active');
+        
+        // বাটনের একটিভ ক্লাস যোগ করা এবং থিম চেঞ্জ করা
+        const buttons = document.querySelectorAll('.tab-btn');
+        if (pageId === 'page1') {
+            buttons[0].classList.add('active');
+            document.body.classList.remove('theme-page2');
+        } else {
+            buttons[1].classList.add('active');
+            document.body.classList.add('theme-page2');
+        }
+
+        // স্ক্রল ইফেক্ট (মোবাইলের জন্য)
+        if(window.innerWidth < 600){
+            document.getElementById(pageId).scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+    }
+</script>
+
+</body>
+</html>
+
+
